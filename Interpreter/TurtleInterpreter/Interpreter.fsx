@@ -35,6 +35,9 @@ let execute commands =
       drawLine (x,y) (x',y')
       { turtle with X = x'; Y = y' }
 
+   let back n turtle = 
+       fun n -> forward -n turtle
+    
    let setPen colour = 
     pen:=
        match colour with
@@ -44,6 +47,7 @@ let execute commands =
 
    let rec perform turtle = function
       | Forward n -> forward n turtle        
+    //  | Back n -> back n turtle
       | Turn n -> { turtle with A=turtle.A + n }
       | Pen colour -> setPen colour; turtle
       | Repeat(n,commands) ->
