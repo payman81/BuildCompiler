@@ -21,11 +21,11 @@ let execute commands =
    let picture = new PictureBox(Dock=DockStyle.Fill, Image=image)
    do  form.Controls.Add(picture)
    let turtle = { X=float width/2.0; Y=float height/2.0; A = -90 }
-   let pen = new Pen(Color.Red)
+   let pen = ref(new Pen(Color.Red))
    
    let drawLine (x1,y1) (x2,y2) =
       use graphics = Graphics.FromImage(image)
-      graphics.DrawLine(pen,int x1,int y1,int x2, int y2)
+      graphics.DrawLine(!pen,int x1,int y1,int x2, int y2)
    
    let forward n turtle =
       let r = float turtle.A * Math.PI / 180.0
@@ -35,9 +35,17 @@ let execute commands =
       drawLine (x,y) (x',y')
       { turtle with X = x'; Y = y' }
 
+   let setPen colour = 
+    pen:=
+       match colour with
+       | Red -> new Pen(Color.Red)
+       | Green -> new Pen(Color.Green)
+       | Blue -> new Pen(Color.Blue)
+
    let rec perform turtle = function
       | Forward n -> forward n turtle        
       | Turn n -> { turtle with A=turtle.A + n }
+      | Pen colour -> setPen colour; turtle
       | Repeat(n,commands) ->
          let rec repeat turtle = function
             | 0 -> turtle
