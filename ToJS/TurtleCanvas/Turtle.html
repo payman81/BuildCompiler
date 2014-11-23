@@ -23,20 +23,39 @@ function turn(n) {
   a += n;
 }
 
-// set-random-position - Note: need to escape minus sign
 function set_random_position() {
   x = Math.random() * width;
   y = Math.random() * height; 
   ctx.moveTo(x,y); 
 }
 
-for(_i1 = 0; _i1< 50; _i1++) {
-  set_random_position();
-  for(_i2 = 0; _i2<36; _i2++) {
-    forward(10);
-    turn(10); 
-  }
+function square() {
+    for (_i1 = 0; _i1 < 4; _i1++) {
+        if (false) {
+            forward(10);
+            turn(90);
+        } else {
+            forward(50);
+            turn(90);
+        }
+    }        
 }
+
+function flower() {
+    for (_i2 = 0; _i2 < 36; _i2++) {
+        turn(10);
+        square();
+    }
+}
+
+function garden(count) {
+    for (_i3 = 0; _i3 < count; _i3++) {
+        set_random_position();
+        flower();
+    }
+}
+
+garden(25);
 
 </script>
 </body>

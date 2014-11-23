@@ -1,11 +1,15 @@
 ﻿module AST =
-   type distance = int
-   type degrees = int
-   type count = int
+   type name = string
+   type param = string
+   type arg = Number of int | Arg of param
    type command =
-      | Forward of distance
-      | Turn of degrees      
-      | Repeat of count * command list
+       | Forward of arg
+       | Left of arg
+       | Right of arg
+       | SetRandomPosition
+       | Repeat of arg * command list
+       | Call of name * arg list
+       | Proc of name * param list * command list
 
 open AST
 open System
@@ -16,15 +20,33 @@ let getVar =
 
 let rec emitCommand command =
       match command with
-      | Forward n -> sprintf "forward(%d);" n  
-      | Turn n -> sprintf "turn(%d);" n
+      | Forward arg -> sprintf "forward(%s);" (emitArg arg)  
+      | Left arg -> sprintf "turn(-(%s));" (emitArg arg)
+      | Right arg -> sprintf "turn(%s);" (emitArg arg)
+      | Proc(name,params,commands)->
+        sprintf "\r\nfunction %s(%s) {\r\n%s}" 
+         name 
+         (String.concat "," ``params``) 
+         (emitBlock commands) 
+         
+      | Call(name,args)->
+         let s = args |> List.map emitArg |> String.concat "+"
+         name + "(" + s + ");"
       | Repeat(n,commands) ->
          let block = emitBlock commands
-         String.Format("for({0}=0;{0}<{1};{0}++) {{\r\n {2}\r\n}}", getVar(), n, block); 
+         String.Format("for({0}=0;{0}<{1};{0}++) {{\r\n {2}\r\n}}", getVar(), emitArg n, block); 
+and emitArg arg = 
+   match arg with
+   | Number n -> sprintf "%d" n
+   | Arg s -> s 
 and emitBlock commands =
    String.concat "" [|for command in commands -> emitCommand(command)|]   
 
-let program = [Repeat(36,[Forward 2;Turn 10])]
+let program = [
+    Proc("circle", [],
+     [Repeat(Number 36,[Forward(Number 2);Right(Number 10)])])
+    Repeat(Number 50, [SetRandomPosition;Call("circle",[])])
+]
 let generatedJS = emitBlock program
 
 let html = 
@@ -53,15 +75,40 @@ function turn(n) {
   a += n;
 }
 
-// set-random-position - Note: need to escape minus sign
 function set_random_position() {
   x = Math.random() * width;
   y = Math.random() * height; 
   ctx.moveTo(x,y); 
 }
 
-// Generated JS
-%s
+function square() {
+    for (_i1 = 0; _i1 < 4; _i1++) {
+        if (false) {
+            forward(10);
+            turn(90);
+        } else {
+            forward(50);
+            turn(90);
+        }
+    }        
+}
+
+function flower() {
+    for (_i2 = 0; _i2 < 36; _i2++) {
+        turn(10);
+        square();
+    }
+}
+
+function garden(count) {
+    for (_i3 = 0; _i3 < count; _i3++) {
+        set_random_position();
+        flower();
+    }
+}
+
+    // Generated JS
+    %s
 
 </script>
 </body>

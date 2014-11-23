@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 <body>
 <canvas id="myCanvas" width="400" height="400"
 style="border:1px solid #000000;">
@@ -11,7 +11,7 @@ var height = 400;
 var x = width/2;
 var y = height/2;
 ctx.moveTo(x,y);
-var a = -90.0;
+var a = 23.0;
 
 function forward(n) {
   x += Math.cos((a*Math.PI)/180.0) * n;
@@ -19,11 +19,8 @@ function forward(n) {
   ctx.lineTo(x,y);
   ctx.stroke();
 }
-
 function back(n) {
-    a = a - 180;
-    forward(n);
-    a = a + 180;
+    forward(-n);
 }
 
 function turn(n) {
@@ -31,45 +28,12 @@ function turn(n) {
 }
 function left(n) { turn(-n); }
 function right(n) { turn(n); }
-
-// set-random-position - Note: need to escape minus sign
+ 
 function set_random_position() {
   x = Math.random() * width;
   y = Math.random() * height; 
   ctx.moveTo(x,y); 
 }
-
-/*
-to tree :depth :length :scale :angle
-  if :depth=0 [stop]
-  setpensize round :depth/2
-  forward :length
-  right :angle
-  tree :depth-1 :length*:scale :scale :angle
-  left 2*:angle
-  tree :depth-1 :length*:scale :scale :angle
-  right :angle
-  back :length
-end
- 
-clearscreen
-tree 10 80 0.7 30
-*/
-
-/*
-function tree(depth, length, scale, angle) {
-    if (depth == 0) return;
-    forward(length);
-    right(angle);
-    tree(depth - 1, length * scale, scale, angle);
-    left(2*angle);
-    tree(depth - 1, length * scale, scale, angle);
-    right(angle);
-    back(length);
-}
-
-tree(10,80,0.7,30)
-*/
 
 function tree(depth, length, scale, angle) {
     if (depth == 0) {
@@ -83,7 +47,7 @@ function tree(depth, length, scale, angle) {
     right(angle);
     back(length);
 }
-tree(10, 40, 0.7, 30);
+tree(10, 80, 0.7, 30);
 
 </script>
 </body>

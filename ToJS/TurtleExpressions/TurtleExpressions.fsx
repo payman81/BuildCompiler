@@ -127,3 +127,9 @@ and fromComparison op =
    | Ge -> ">=" 
 
 emitBlock 0 program
+
+
+open System.IO
+
+let path = Path.Combine(__SOURCE_DIRECTORY__, "Turtle.html")
+path |> System.Diagnostics.Process.Start 
