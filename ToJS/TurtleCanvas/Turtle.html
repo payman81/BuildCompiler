@@ -1,0 +1,43 @@
+﻿<html>
+<body>
+<canvas id="myCanvas" width="400" height="400"
+style="border:1px solid #000000;">
+</canvas>
+<script>
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var width = 400;
+var height = 400;
+var x = width/2;
+var y = height/2;
+ctx.moveTo(x,y);
+var a = 23.0;
+
+function forward(n) {
+  x += Math.cos((a*Math.PI)/180.0) * n;
+  y += Math.sin((a*Math.PI)/180.0) * n;
+  ctx.lineTo(x,y);
+  ctx.stroke();
+}
+function turn(n) {
+  a += n;
+}
+
+// set-random-position - Note: need to escape minus sign
+function set_random_position() {
+  x = Math.random() * width;
+  y = Math.random() * height; 
+  ctx.moveTo(x,y); 
+}
+
+for(_i1 = 0; _i1< 50; _i1++) {
+  set_random_position();
+  for(_i2 = 0; _i2<36; _i2++) {
+    forward(10);
+    turn(10); 
+  }
+}
+
+</script>
+</body>
+</html>

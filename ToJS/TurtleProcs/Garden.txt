@@ -1,0 +1,10 @@
+﻿to square
+    repeat 4 [ifelse 1 = 0 [forward 10 right 90] [forward 50 right 90]]
+end
+to flower
+    repeat 36 [right 10 square]
+end
+to garden :count
+    repeat :count [set-random-position flower]
+end
+garden 25
